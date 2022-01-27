@@ -1,0 +1,129 @@
+===================
+List all clusters for your group [Table]
+===================
+SELECT
+  a.Id as Cluster,
+  b.Id as ScenarioId
+FROM
+  Cluster a, 
+  Scenario b
+WHERE
+   b.Id = x 
+   and 
+   a.ScenarioId = b.Id
+
+===================
+List all storage nodes for your cluser[Table]
+===================
+SELECT
+  a.Id as Cluster,
+  c.Id as StorageNode
+FROM
+  Cluster a, 
+  Scenario b,
+  StorageNode c
+WHERE
+   b.Id = x 
+   and 
+   a.ScenarioId = b.Id
+   and
+   c.ClusterId = a.Id
+
+===================
+List all computation nodes for your cluster[Table]
+===================
+SELECT
+  a.Id as Cluster,
+  c.Id as ComputationNode
+FROM
+  Cluster a, 
+  Scenario b,
+  ComputationNode c
+WHERE
+   b.Id = x 
+   and 
+   a.ScenarioId = b.Id
+   and
+   c.ClusterId = a.Id
+
+===================
+List all VM's for a computation node [Table]
+===================
+SELECT
+  b.Id as VmId, 
+  a.Id as NodeId
+FROM
+  ComputationNode a, 
+  VM b
+WHERE
+   a.Id = x 
+   and 
+   a.Id = b.ComputationNodeId
+
+===================
+Get the amount of vm's on a given computation node [Table]
+===================
+SELECT
+  count(b.Id) as vmCount
+FROM
+  ComputationNode a, 
+  VM b
+WHERE
+   a.Id = 1 
+   and 
+   a.Id = b.ComputationNodeId
+group by
+   a.Id
+
+===================
+Get the usage of a given storage node [Timelapse]
+===================
+SELECT
+  $__timeEpoch(b.TimedAt),
+  a.StorageSpace, 
+  b.UsedStorageSpace
+FROM
+  StorageNode a,
+  StorageNodeUsage b
+WHERE
+   a.Id = x 
+   and 
+   a.Id = b.StorageNodeId
+ORDER BY
+  b.TimedAt ASC
+
+===================
+Get the usage of a given VM [Timelapse]
+===================
+SELECT
+  $__timeEpoch(b.TimedAt),
+  a.Cores,
+  b.Cpu,
+  b.Ram
+FROM
+  VM a, VmUsage b
+WHERE
+   a.Id = x
+   and 
+   a.Id = b.VmId
+ORDER BY
+  b.TimedAt ASC
+
+===================
+Get the usage of a given computation node [Timelapse]
+===================
+SELECT
+  $__timeEpoch(b.TimedAt),
+  a.Cores as totalCores, 
+  a.Ram as totalRAM, 
+  b.Ram as usedRAM, 
+  b.Cores as usedCores
+FROM
+  ComputationNode a, 
+  ComputationNodeUsage b
+WHERE
+   a.Id = x 
+   and 
+   a.Id = b.ComputationNodeId
+ORDER BY
+  b.TimedAt ASC
